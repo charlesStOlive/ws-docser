@@ -1,17 +1,20 @@
-
 <div class="control-scrollbar drag-scrollbar vertical" data-control="scrollbar" data-disposable="">
     <h1><a href="<?=Backend::url('waka/docser/docs/index/')?>">Documentation</a></h1>
     <div id="docsMenu" style="height:100vh;">
-    <?php foreach( $groupDocs as $label=>$group) :?>
+        <?php foreach( $groupDocs as $label=>$group) :?>
         <p class="subtitle"><?=$label?></p>
         <?php foreach( $group as $key=>$doc) {?>
-        <a href="<?=Backend::url('waka/docser/docs/preview/'.$doc['code'])?>">
-            <span class="header"><?=$doc['title'] ?? 'inc' ?></span>
-            <?php if($doc['comment'] ?? false) : ?>
-            <span class="description"><?=$doc['comment'] ?? 'inc' ?></span>
-            <?php endif ?>
+        <?php $param = $this->params[0] ?? null ?>;
+        <a href="<?=Backend::url('waka/docser/docs/preview/'.$doc['code'])?>" 
+            class="<?php if($doc['code'] == $param) : ?>current<?php endif ?>">
+            <div>
+                <span class="header"><?=$doc['title'] ?? 'inc' ?></span>
+                <?php if($doc['comment'] ?? false) : ?>
+                <span class="description"><?=$doc['comment'] ?? 'inc' ?></span>
+                <?php endif ?>
+            </div>
         </a>
         <?php } ?>
-    <?php endforeach ?>
+        <?php endforeach ?>
     </div>
 </div>

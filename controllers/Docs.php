@@ -68,7 +68,7 @@ class Docs extends Controller
     }
 
     public function getDocsNavigation() {
-        $docsdata = $this->docsCollection->sortBy('group')->groupBy('group');
+        $docsdata = $this->docsCollection->sortBy('order')->sortBy('group')->groupBy('group');
         return $docsdata->toArray();
 
     }
