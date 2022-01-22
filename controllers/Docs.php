@@ -53,7 +53,7 @@ class Docs extends Controller
                 foreach($files as $key=>$file) {
                     $objet = $file;
                     $objet['code'] = $key;
-                    $objet['path'] = $pluginPath.'/docs\/'.$key.'.md';
+                    $objet['path'] = $pluginPath.'/docs/'.$key.'.md';
                     $this->docsCollection->put($key, $objet);
                 }
                 $parts = $datas['parts'] ?? [];

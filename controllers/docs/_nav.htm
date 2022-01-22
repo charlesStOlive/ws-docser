@@ -4,7 +4,7 @@
         <?php foreach( $groupDocs as $label=>$group) :?>
         <p class="subtitle"><?=$label?></p>
         <?php foreach( $group as $key=>$doc) {?>
-        <?php $param = $this->params[0] ?? null ?>;
+        <?php $param = $this->params[0] ?? null ?>
         <a href="<?=Backend::url('waka/docser/docs/preview/'.$doc['code'])?>" 
             class="<?php if($doc['code'] == $param) : ?>current<?php endif ?>">
             <div>
