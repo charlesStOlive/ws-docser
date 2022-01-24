@@ -59,7 +59,7 @@ class Docs extends Controller
                 $parts = $datas['parts'] ?? [];
                 foreach($parts as $key=>$part) {
                     $objet = $part;
-                    $objet['code'] = $key;
+                    $objet['code'] = $part['code'] ?? $key;
                     $objet['path'] = $pluginPath.'/docs/parts/'.$key.'.md';
                     $this->partsCollection->push($objet);
                 }
@@ -76,22 +76,6 @@ class Docs extends Controller
     public function getDocFromCode($docId) {
         return $this->docsCollection->get($docId);
     }
-
-    // public function getNav() {
-    //     return $this->renderPartial('@nav.htm', [
-    //         'navs' => $this->docsConfig,
-    //         'currentPage' =>  $this->getCurrentPage()
-    //         ]);
-    // }
-
-
-    // public function getCurrentPage() {
-    //      $docId = $this->param('doc_id');
-    //     if(!$docId) {
-    //         $docId = 'utils_install';
-    //     }
-    //     return $docId;
-    // }
 
     public function renderDoc($docId) {
         if(!$docId) {
@@ -117,19 +101,26 @@ class Docs extends Controller
     }
 
     public function insertpart($matches) {
-        $partName = $matches[1] ?? null;
-        $partsToReturn = null;
-        if($partName) {
-            trace_log($partName);
-            trace_log($this->partsCollection);
-            $parts = $this->partsCollection->where('code', $partName)->toArray();
-            $marpartContentkDown = null;
-            foreach($parts as $part) {
-                $partsToReturn .= \File::get($part['path']);
-            }
-            trace_log($partsToReturn);
-            return $partsToReturn;
+        $partData = $matches[1] ?? null;
+        if(!$partData) {
+            return null;
         }
+        $partsToReturn = null;
+        //Si il y a plusieurs parts
+        $arrayPart = explode(',' , $partData);
+        foreach($arrayPart as $partName) {
+            if($partName) {
+                trace_log($partName);
+                trace_log($this->partsCollection);
+                $parts = $this->partsCollection->where('code', $partName)->toArray();
+                $marpartContentkDown = null;
+                foreach($parts as $part) {
+                    $partsToReturn .= \File::get($part['path']);
+                }
+            }
+        }
+        return $partsToReturn;
+        
         
 
     }
