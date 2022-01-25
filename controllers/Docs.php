@@ -29,7 +29,7 @@ class Docs extends Controller
     }
 
     public function preview($pageCode = null) {
-        trace_log($pageCode);
+        //trace_log($pageCode);
         $content = $this->renderDoc($pageCode);
         $this->vars['content'] = $content;
 
@@ -46,7 +46,7 @@ class Docs extends Controller
             $pluginPath = $plugin->getPluginPath();
             $yamlPath = $pluginPath.'/wakadocs.yaml';
             $yamlFile = \File::exists($yamlPath);
-            trace_log($yamlPath." :  ".$yamlFile);
+            //trace_log($yamlPath." :  ".$yamlFile);
             if($yamlFile) {
                 $datas = \Yaml::parseFile($yamlPath);
                 $files = $datas['files'] ?? [];
@@ -110,8 +110,8 @@ class Docs extends Controller
         $arrayPart = explode(',' , $partData);
         foreach($arrayPart as $partName) {
             if($partName) {
-                trace_log($partName);
-                trace_log($this->partsCollection);
+                //trace_log($partName);
+                //trace_log($this->partsCollection);
                 $parts = $this->partsCollection->where('code', $partName)->toArray();
                 $marpartContentkDown = null;
                 foreach($parts as $part) {
