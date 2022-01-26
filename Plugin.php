@@ -50,9 +50,7 @@ class Plugin extends PluginBase
      */
     public function registerComponents()
     {
-        return [
-            'Waka\Docser\Components\Doc' => 'doc_component',
-        ];
+        return [];
     }
 
     /**
@@ -63,13 +61,6 @@ class Plugin extends PluginBase
     public function registerPermissions()
     {
         return []; // Remove this line to activate
-
-        return [
-            'waka.docser.some_permission' => [
-                'tab' => 'docser',
-                'label' => 'Some permission'
-            ],
-        ];
     }
 
     /**
@@ -85,7 +76,6 @@ class Plugin extends PluginBase
                 'label'       => 'Documentation',
                 'url'         => Backend::url('waka/docser/docs'),
                 'icon'        => 'icon-book',
-                'permissions' => ['waka.docser.*'],
                 'order'       => 1500,
             ],
         ];
