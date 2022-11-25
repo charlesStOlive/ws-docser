@@ -4,6 +4,7 @@ use BackendMenu;
 use Backend\Classes\Controller;
 use System\Classes\PluginManager;
 use Winter\Storm\Support\Collection;
+use Waka\Docser\Models\Appdoc;
 
 /**
  * Docs Back-end Controller
@@ -15,27 +16,97 @@ class Docs extends Controller
     private Collection $partsCollection;
     private $docsPart;
 
+
+
     public function __construct()
     {
         parent::__construct();
         $this->addCss('/plugins/waka/docser/assets/css/docs.css');
         BackendMenu::setContext('Waka.Docser', 'docs');
         $this->getDocsData();
-        $this->vars['groupDocs'] = $this->getDocsNavigation();
+        $this->vars['systemDocsNav'] = $this->getDocsNavigation();
+        $this->vars['manualDocsNav'] = $this->getManualDocsNavigation();
     }
 
     public function index($pageCode = null) {
 
     }
 
-    public function preview($pageCode = null) {
+    public function system_preview($pageCode = null) {
         //trace_log($pageCode);
         $content = $this->renderDoc($pageCode);
         $this->vars['content'] = $content;
 
     }
 
+    public function manual_preview($slug) {
+        //trace_log($pageCode);
+        // trace_log($this->user->toArray());
+        $docData = Appdoc::where('slug', $slug)->first();
+        $this->pageTitle = $this->vars['title'] =  $docData->name;
+        $content = $this->renderManualDoc($docData);
+        $this->vars['content'] = $content;
+    }
 
+
+    /**
+     * getDocsNavigation 
+     * les docs manuels
+     * Attention le filtre s'effectue sur les id de roles
+     */
+    public function getManualDocsNavigation() {
+        trace_log('getManualDocsNavigation');
+        trace_log($this->user->toArray());
+        $docs = Appdoc::get(['name', 'slug', 'description', 'roles']);
+        $docs = $docs->filter(function ($item) {
+            $roles = $item['roles'] ?? false;
+            if($roles) {
+                if(in_array($this->user->role->id, $roles) || $this->user->is_superuser) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }  else {
+                //trace_log('pas de role');
+                return true;
+            }
+        });
+ 
+        return $docs;
+
+    }
+
+
+    /**
+     * getDocsNavigation 
+     * les docs automatiques des plugins
+     * Attention le filtre s'effectue sur les codes de plugin via l'information permission
+     */
+    public function getDocsNavigation() {
+        // trace_log('getDocsNavigation');
+        $docsdata = $this->docsCollection->sortBy('order');
+        $docsdata = $docsdata->filter(function ($item) {
+            $permission = $item['permission'] ?? false;
+            if($permission) {
+                trace_log("permission : ".$this->user->hasAccess($permission));
+                if($this->user->hasAccess($permission)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }  else {
+                //trace_log('pas de role');
+                return true;
+            }
+        });
+        $docsdata = $docsdata->sortBy('group')->groupBy('group');
+        // trace_log($docsdata);
+        // return $docsdata->toArray();
+        // $docsdata = $this->docsCollection->sortBy('order')->sortBy('group')->groupBy('group');
+        //trace_log($docsdata->toArray());
+        return $docsdata->toArray();
+
+    }
 
     private function getDocsData() {
         $this->docsCollection = new Collection();
@@ -67,11 +138,7 @@ class Docs extends Controller
         }
     }
 
-    public function getDocsNavigation() {
-        $docsdata = $this->docsCollection->sortBy('order')->sortBy('group')->groupBy('group');
-        return $docsdata->toArray();
-
-    }
+    
 
     public function getDocFromCode($docId) {
         return $this->docsCollection->get($docId);
@@ -125,9 +192,19 @@ class Docs extends Controller
 
     }
 
-    // function doMarkdownLinks($s) {
-    // return preg_replace_callback('/\[(.*?)\]\((.*?)\)/', function ($matches) {
-    //         return '<a href="' . $matches[2] . '">' . $matches[1] . '</a>';
-    //     }, htmlspecialchars($s));
-    // }
+
+    public function renderManualDoc($data) {
+        
+        
+        
+        //Modification des urls des images
+        // $regex = '/!\[(.*)\]\(([^ ]+)\)/m';
+        // $basePath = '/plugins/'.$docData['relativePath'];
+        // $subst = '![$1]('.$basePath.htmlspecialchars('/$2)');
+        // $result = preg_replace($regex, $subst, $fileContent);
+        // //
+        // $result = $this->integrateSubart($result);
+        $fileContent = \Markdown::parse($data->content);
+        return $fileContent;
+    }
 }
