@@ -2,6 +2,7 @@
 
 use Backend;
 use System\Classes\PluginBase;
+use System\Classes\SettingsManager;
 
 /**
  * docser Plugin Information File
@@ -60,7 +61,12 @@ class Plugin extends PluginBase
      */
     public function registerPermissions()
     {
-        return []; // Remove this line to activate
+        return [
+            'waka.docser.admin' => [
+                'tab' => 'Waka - docser',
+                'label' => 'Administrateur de docser',
+            ],
+        ];
     }
 
     /**
@@ -77,6 +83,25 @@ class Plugin extends PluginBase
                 'url'         => Backend::url('waka/docser/docs'),
                 'icon'        => 'icon-book',
                 'order'       => 1500,
+            ],
+        ];
+    }
+
+    /**
+     * Registers back-end navigation items for this plugin.
+     *
+     * @return array
+     */
+    public function registerSettings()
+    {
+        return [
+            'appdocs' => [
+                'label' => \Lang::get('waka.docser::appdoc.menu_appdocs'),
+                'description' => \Lang::get('waka.docser::appdoc.menu_appdocs_description'),
+                'category' => SettingsManager::CATEGORY_SYSTEM,
+                'icon' => 'icon-book',
+                'url' => \Backend::url('waka/docser/appdocs/index/'),
+                'permissions' => ['waka.docser.admin.*'],
             ],
         ];
     }
