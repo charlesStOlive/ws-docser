@@ -46,15 +46,18 @@ une liste
 * liste
 * liste
 * liste
+
 ---
+
 ### Liste numeroté
 ```
 liste numeroté :
 1. liste
 2. liste
 3. liste
-**donnera**
 ```
+**donnera**
+
 liste numeroté :
 1. liste
 2. liste
@@ -62,7 +65,7 @@ liste numeroté :
 
 ## Sauts de lignes 
 Les sauts de lignes peuvent être capricieux en markdown. 
-Si le resultat n'est pas bon vous pouvez ajouter **<br>** à la fin d'une ligne pour forcer le saut de ligne. 
+Si le resultat n'est pas bon vous pouvez ajouter ```<br>``` à la fin d'une ligne pour forcer le saut de ligne. 
 ```
 Une ligne
 Une autre ligne
