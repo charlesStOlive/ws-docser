@@ -55,8 +55,8 @@ class Docs extends Controller
      * Attention le filtre s'effectue sur les id de roles
      */
     public function getManualDocsNavigation() {
-        trace_log('getManualDocsNavigation');
-        trace_log($this->user->toArray());
+        //trace_log('getManualDocsNavigation');
+        //trace_log($this->user->toArray());
         $docs = Appdoc::get(['name', 'slug', 'description', 'roles']);
         $docs = $docs->filter(function ($item) {
             $roles = $item['roles'] ?? false;
@@ -88,7 +88,7 @@ class Docs extends Controller
         $docsdata = $docsdata->filter(function ($item) {
             $permission = $item['permission'] ?? false;
             if($permission) {
-                trace_log("permission : ".$this->user->hasAccess($permission));
+                //trace_log("permission : ".$this->user->hasAccess($permission));
                 if($this->user->hasAccess($permission)) {
                     return true;
                 } else {
