@@ -101,7 +101,7 @@ class Plugin extends PluginBase
                 'category' => SettingsManager::CATEGORY_SYSTEM,
                 'icon' => 'icon-book',
                 'url' => \Backend::url('waka/docser/appdocs/index/'),
-                'permissions' => ['waka.docser.admin.*'],
+                'permissions' => ['waka.docser.admin'],
             ],
         ];
     }
