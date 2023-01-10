@@ -18,14 +18,14 @@ breadcrump:
 tool_bar:
     base:
         create: 
-            show: true
-            permissions: [docser.admin]
-            url: waka/docser/appdocs/create
+            show: true 
+            permissions: [waka.docser.admin]
+            url: waka/docser/appdocs/create  
         reorder: 
             show: false 
         delete: 
             show: true
-            permissions: [docser.admin]
+            permissions: [waka.docser.admin]  
     config_btns:
             format: all
             btns:
@@ -70,13 +70,13 @@ action_bar:
 #     base:
 #         create: 
 #             show: true
-#             permissions: [docser.admin]
+#             permissions: [waka.docser.admin]
 #             url: waka/docser/appdocs/create
 #         reorder: 
 #             show: false#  
 #         delete: 
 #             show: true
-#             permissions: [docser.admin]
+#             permissions: [waka.docser.admin]
 #     config_btns:
 #             format: all
 #             btns:

@@ -7,6 +7,7 @@ return [
     'menu_appdocs' => 'Documentations',
     'menu_appdocs_description' => 'créer et modifier des pages de documentations',
     'name' => 'Nom de la page',
+    'no_doc' => 'Aucune doc disponible',
     'roles' => 'Rôles',
     'slug' => 'Slug page',
     'title' => 'Gestion documentations'
