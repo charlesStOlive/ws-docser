@@ -19,6 +19,8 @@ fields:
         label: waka.docser::appdoc.roles
         span: right
         type: taglist
+        useKey: true
+        mode: array
         options: listUserRoles
         trigger:
             action: show

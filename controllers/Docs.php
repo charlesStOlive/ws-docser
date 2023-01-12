@@ -60,6 +60,7 @@ class Docs extends Controller
         $docs = Appdoc::get(['name', 'slug', 'description', 'roles']);
         $docs = $docs->filter(function ($item) {
             $roles = $item['roles'] ?? false;
+            trace_log($roles);
             if($roles) {
                 if(in_array($this->user->role->id, $roles) || $this->user->is_superuser) {
                     return true;
