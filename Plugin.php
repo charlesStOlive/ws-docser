@@ -79,7 +79,7 @@ class Plugin extends PluginBase
 
         return [
             'docser' => [
-                'label'       => 'Documentation',
+                'label'       => \Lang::get('waka.docser::appdoc.title_front'),
                 'url'         => Backend::url('waka/docser/docs'),
                 'icon'        => 'icon-book',
                 'order'       => 1500,

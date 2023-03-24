@@ -1,5 +1,6 @@
 <?php
 return [
+    'title_front' => 'Documentation',
     'content' => 'Utilise une data source',
     'description' => 'Description',
     'form_name' => 'Modifier doc',
