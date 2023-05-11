@@ -90,7 +90,7 @@ class Docs extends Controller
             $permission = $item['permission'] ?? false;
             if($permission) {
                 //trace_log("permission : ".$this->user->hasAccess($permission));
-                if($this->user->hasAccess($permission, true)) {
+                if($this->user->hasAccess($permission, false)) {
                     return true;
                 } else {
                     return false;
