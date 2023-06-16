@@ -18,7 +18,7 @@ class Appdocs extends Controller
     public $listConfig = 'config_list.yaml';
     public $btnsConfig = 'config_btns.yaml';
 
-    public $requiredPermissions = ['waka.docser.admin'];
+    public $requiredPermissions = ['waka.docser.edit'];
     //FIN DE LA CONFIG AUTO
     //startKeep/
     

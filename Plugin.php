@@ -62,15 +62,15 @@ class Plugin extends PluginBase
     public function registerPermissions()
     {
         return [
-            'waka.docser.admin' => [
+            'waka.docser.edit' => [
                 'tab' => 'Waka - docser',
-                'label' => 'Administrateur de docser',
+                'label' => 'Peut créer de la doc',
             ],
-             'waka.docser.technics' => [
+             'waka.docser.doc.technic' => [
                 'tab' => 'Waka - docser',
                 'label' => 'A accès aux docs techniques',
             ],
-             'waka.docser.integrator' => [
+             'waka.docser.doc.integrator' => [
                 'tab' => 'Waka - docser',
                 'label' => 'A accès aux docs pour les integrateurs',
             ],
@@ -109,7 +109,7 @@ class Plugin extends PluginBase
                 'category' => SettingsManager::CATEGORY_SYSTEM,
                 'icon' => 'icon-book',
                 'url' => \Backend::url('waka/docser/appdocs/index/'),
-                'permissions' => ['waka.docser.admin'],
+                'permissions' => ['waka.docser.edit'],
             ],
         ];
     }

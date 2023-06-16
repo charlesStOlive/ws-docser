@@ -37,7 +37,7 @@ class CreateRolesDoc extends BaseScaffoldCommand
         if (count($parts) !== 2) {
             throw new InvalidArgumentException("Invalid plugin name, either too many dots or not enough. Example: Author.PluginName");
         }
-        $allPermissions = PluginManager::instance()->getRegistrationMethodValues('registerPermissions');
+        $allPermissions = \BackendAuth::listTabbedPermissions();
         if (!$allPermissions) {
             return [];
         }
@@ -69,12 +69,10 @@ class CreateRolesDoc extends BaseScaffoldCommand
         $permissions = [];
         foreach ($allPermissions as $plugin) {
             if (is_array($plugin)) {
-                foreach ($plugin as $code => $details) {
-                    if ($rolePermissions[$code] ?? false) {
-                        $label = $details['label'] ?? null;
-                        $tab = $details['tab'] ?? null;
-                        if ($label) {
-                            $permissions[$code] = \Lang::get($tab) . ': <b> ' . \Lang::get($label).'</b> ('.$code.')';
+                foreach ($plugin as  $permissionStd) {
+                    if ($rolePermissions[$permissionStd->code] ?? false) {
+                        if ($permissionStd->label) {
+                            $permissions[$permissionStd->code] = \Lang::get($permissionStd->tab) . ': <b> ' . \Lang::get($permissionStd->label).'</b> ('.$permissionStd->code.')';
                         }
                     }
                 }
