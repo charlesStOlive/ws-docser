@@ -10,7 +10,7 @@ return [
     'menu_appdocs_description' => 'créer et modifier des pages de documentations',
     'name' => 'Nom de la page',
     'preview_name' => 'Preview Doc',
-    'roles' => 'Rôles',
+    'permissions' => 'Permissions',
     'slug' => 'Slug page',
     'title' => 'Gestion documentations',
     'title_front' => 'Documentation',

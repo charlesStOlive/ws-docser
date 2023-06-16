@@ -1,7 +1,10 @@
-<?php namespace Waka\Docser\Models;
+<?php
+
+namespace Waka\Docser\Models;
 
 use Model;
 use Carbon\Carbon;
+use System\Classes\PluginManager;
 
 /**
  * appdoc Model
@@ -38,14 +41,12 @@ class Appdoc extends Model
         'content' => 'required',
     ];
 
-    public $customMessages = [
-    ];
+    public $customMessages = [];
 
     /**
      * @var array attributes send to datasource for creating document
      */
-    public $attributesToDs = [
-    ];
+    public $attributesToDs = [];
 
     /**
      * @var array Attributes to be cast to native types
@@ -56,14 +57,13 @@ class Appdoc extends Model
      * @var array Attributes to be cast to JSON
      */
     protected $jsonable = [
-        'roles',
+        'permissions',
     ];
 
     /**
      * @var array Attributes to be appended to the API representation of the model (ex. toArray())
      */
-    protected $appends = [
-    ];
+    protected $appends = [];
 
     /**
      * @var array Attributes to be removed from the API representation of the model (ex. toArray())
@@ -78,37 +78,25 @@ class Appdoc extends Model
         'updated_at',
     ];
 
-/**
-    * @var array Spécifié le type d'export à utiliser pour chaque champs
-    */
-    public $importExportConfig = [
-    ]; 
+    /**
+     * @var array Spécifié le type d'export à utiliser pour chaque champs
+     */
+    public $importExportConfig = [];
 
     /**
      * @var array Relations
      */
-    public $hasOne = [
-    ];
-    public $hasMany = [
-    ];
-    public $hasOneThrough = [
-    ];
-    public $hasManyThrough = [
-    ];
-    public $belongsTo = [
-    ];
-    public $belongsToMany = [
-    ];        
-    public $morphTo = [
-    ];
-    public $morphOne = [
-    ];
-    public $morphMany = [
-    ];
-    public $attachOne = [
-    ];
-    public $attachMany = [
-    ];
+    public $hasOne = [];
+    public $hasMany = [];
+    public $hasOneThrough = [];
+    public $hasManyThrough = [];
+    public $belongsTo = [];
+    public $belongsToMany = [];
+    public $morphTo = [];
+    public $morphOne = [];
+    public $morphMany = [];
+    public $attachOne = [];
+    public $attachMany = [];
 
     //startKeep/
 
@@ -119,8 +107,27 @@ class Appdoc extends Model
     /**
      * LISTS
      **/
-    public function listUserRoles() {
-        return \Backend\Models\UserRole::lists('name', 'id');
+
+    public function listAllPermissions()
+    {
+
+        $bundles = PluginManager::instance()->getRegistrationMethodValues('registerPermissions');
+        if (!$bundles) {
+            return [];
+        }
+        $permissions = [];
+        foreach ($bundles as $plugin) {
+            if (is_array($plugin)) {
+                foreach ($plugin as $code => $details) {
+                    $label = $details['label'] ?? null;
+                    $tab = $details['tab'] ?? null;
+                    if ($label) {
+                        $permissions[$code] = \Lang::get($tab).': '.\Lang::get($label);
+                    }
+                }
+            }
+        }
+        return $permissions;
     }
 
     /**
@@ -134,7 +141,7 @@ class Appdoc extends Model
     /**
      * SETTERS
      */
- 
+
     /**
      * FILTER FIELDS
      */
@@ -143,5 +150,5 @@ class Appdoc extends Model
      * OTHERS
      */
 
-//endKeep/
+    //endKeep/
 }

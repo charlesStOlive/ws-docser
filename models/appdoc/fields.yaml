@@ -14,14 +14,15 @@ fields:
     limit_users:
         label: waka.docser::appdoc.limit_users
         span: left
+        default: true
         type: switch
-    roles:
-        label: waka.docser::appdoc.roles
+    permissions:
+        label: waka.docser::appdoc.permissions
         span: right
         type: taglist
         useKey: true
         mode: array
-        options: listUserRoles
+        options: listAllPermissions
         trigger:
             action: show
             field: limit_users

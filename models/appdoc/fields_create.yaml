@@ -15,7 +15,7 @@ fields:
         label: waka.docser::appdoc.limit_users
         span: left
         type: switch
-    roles:
+    permissions:
         label: waka.docser::appdoc.roles
         span: right
         type: taglist

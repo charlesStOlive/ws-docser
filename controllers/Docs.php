@@ -1,4 +1,6 @@
-<?php namespace Waka\Docser\Controllers;
+<?php
+
+namespace Waka\Docser\Controllers;
 
 use BackendMenu;
 use Backend\Classes\Controller;
@@ -14,7 +16,6 @@ class Docs extends Controller
     public $layout = 'empty';
     private Collection $docsCollection;
     private Collection $partsCollection;
-    private $docsPart;
 
 
 
@@ -28,20 +29,18 @@ class Docs extends Controller
         $this->vars['manualDocsNav'] = $this->getManualDocsNavigation();
     }
 
-    public function index($pageCode = null) {
-
+    public function index($pageCode = null)
+    {
     }
 
-    public function system_preview($pageCode = null) {
-        //trace_log($pageCode);
+    public function system_preview($pageCode = null)
+    {
         $content = $this->renderDoc($pageCode);
         $this->vars['content'] = $content;
-
     }
 
-    public function manual_preview($slug) {
-        //trace_log($pageCode);
-        // trace_log($this->user->toArray());
+    public function manual_preview($slug)
+    {
         $docData = Appdoc::where('slug', $slug)->first();
         $this->pageTitle = $this->vars['title'] =  $docData->name;
         $content = $this->renderManualDoc($docData);
@@ -54,27 +53,13 @@ class Docs extends Controller
      * les docs manuels
      * Attention le filtre s'effectue sur les id de roles
      */
-    public function getManualDocsNavigation() {
-        //trace_log('getManualDocsNavigation');
-        //trace_log($this->user->toArray());
-        $docs = Appdoc::get(['name', 'slug', 'description', 'roles']);
-        $docs = $docs->filter(function ($item) {
-            $roles = $item['roles'] ?? false;
-            //trace_log($roles);
-            if($roles) {
-                if(in_array($this->user->role->id, $roles) || $this->user->is_superuser) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }  else {
-                //trace_log('pas de role');
-                return true;
-            }
-        });
- 
+    public function getManualDocsNavigation()
+    {
+        $docs = Appdoc::get(['name', 'slug', 'description', 'permissions']);
+        trace_log($docs->toArray());
+        $docs = $this->filterByPermission($docs);
+        trace_log($docs->toArray());
         return $docs;
-
     }
 
 
@@ -83,70 +68,71 @@ class Docs extends Controller
      * les docs automatiques des plugins
      * Attention le filtre s'effectue sur les codes de plugin via l'information permission
      */
-    public function getDocsNavigation() {
-        // trace_log('getDocsNavigation');
+    public function getDocsNavigation()
+    {
         $docsdata = $this->docsCollection->sortBy('order');
-        $docsdata = $docsdata->filter(function ($item) {
-            $permission = $item['permission'] ?? false;
-            if($permission) {
-                //trace_log("permission : ".$this->user->hasAccess($permission));
-                if($this->user->hasAccess($permission, false)) {
+        $docsdata = $this->filterByPermission($docsdata);
+        $docsdata = $docsdata->sortBy('group')->groupBy('group');
+        return $docsdata->toArray();
+    }
+
+    private function filterByPermission($datas)
+    {
+        return $datas->filter(function ($item) {
+            $permissions = $item['permissions'] ?? false;
+            if ($permissions) {
+                if ($this->user->hasAccess($permissions, false)) {
                     return true;
                 } else {
                     return false;
                 }
-            }  else {
-                //trace_log('pas de role');
+            } else {
                 return true;
             }
         });
-        $docsdata = $docsdata->sortBy('group')->groupBy('group');
-        // trace_log($docsdata);
-        // return $docsdata->toArray();
-        // $docsdata = $this->docsCollection->sortBy('order')->sortBy('group')->groupBy('group');
-        //trace_log($docsdata->toArray());
-        return $docsdata->toArray();
-
     }
 
-    private function getDocsData() {
+    private function getDocsData()
+    {
         $this->docsCollection = new Collection();
         $this->partsCollection = new Collection();
         $plugins = PluginManager::instance()->getPlugins();
         $docCollection = new \Winter\Storm\Support\Collection();
-        foreach($plugins as $plugin) {
+        foreach ($plugins as $plugin) {
             $pluginPath = $plugin->getPluginPath();
-            $yamlPath = $pluginPath.'/wakadocs.yaml';
+            $yamlPath = $pluginPath . '/wakadocs.yaml';
             $yamlFile = \File::exists($yamlPath);
             //trace_log($yamlPath." :  ".$yamlFile);
-            if($yamlFile) {
+            if ($yamlFile) {
                 $datas = \Yaml::parseFile($yamlPath);
                 $files = $datas['files'] ?? [];
-                foreach($files as $key=>$file) {
+                foreach ($files as $key => $file) {
                     $objet = $file;
                     $objet['code'] = $key;
-                    $objet['path'] = $pluginPath.'/docs/'.$key.'.md';
+                    $objet['path'] = $pluginPath . '/docs/' . $key . '.md';
                     $this->docsCollection->put($key, $objet);
                 }
                 $parts = $datas['parts'] ?? [];
-                foreach($parts as $key=>$part) {
+                foreach ($parts as $key => $part) {
                     $objet = $part;
                     $objet['code'] = $part['code'] ?? $key;
-                    $objet['path'] = $pluginPath.'/docs/parts/'.$key.'.md';
+                    $objet['path'] = $pluginPath . '/docs/parts/' . $key . '.md';
                     $this->partsCollection->push($objet);
                 }
             }
         }
     }
 
-    
 
-    public function getDocFromCode($docId) {
+
+    public function getDocFromCode($docId)
+    {
         return $this->docsCollection->get($docId);
     }
 
-    public function renderDoc($docId) {
-        if(!$docId) {
+    public function renderDoc($docId)
+    {
+        if (!$docId) {
             $docId = 'utils_install';
         }
         $docData = $this->getDocFromCode($docId);
@@ -154,57 +140,44 @@ class Docs extends Controller
         $fileContent = \File::get($docPath);
         //Modification des urls des images
         $regex = '/!\[(.*)\]\(([^ ]+)\)/m';
-        $basePath = '/plugins/'.$docData['relativePath'];
-        $subst = '![$1]('.$basePath.htmlspecialchars('/$2)');
+        $basePath = '/plugins/' . $docData['relativePath'];
+        $subst = '![$1](' . $basePath . htmlspecialchars('/$2)');
         $result = preg_replace($regex, $subst, $fileContent);
         //
         $result = $this->integrateSubart($result);
         return \Markdown::parse($result);
     }
 
-    public function integrateSubart($text) {
+    public function integrateSubart($text)
+    {
         $regex = '/<!--includepart\[(.*?)\]-->/m';
-        return preg_replace_callback($regex, [&$this,'insertpart'], $text);
-        
+        return preg_replace_callback($regex, [&$this, 'insertpart'], $text);
     }
 
-    public function insertpart($matches) {
+    public function insertpart($matches)
+    {
         $partData = $matches[1] ?? null;
-        if(!$partData) {
+        if (!$partData) {
             return null;
         }
         $partsToReturn = null;
         //Si il y a plusieurs parts
-        $arrayPart = explode(',' , $partData);
-        foreach($arrayPart as $partName) {
-            if($partName) {
-                //trace_log($partName);
-                //trace_log($this->partsCollection);
+        $arrayPart = explode(',', $partData);
+        foreach ($arrayPart as $partName) {
+            if ($partName) {
                 $parts = $this->partsCollection->where('code', $partName)->toArray();
                 $marpartContentkDown = null;
-                foreach($parts as $part) {
+                foreach ($parts as $part) {
                     $partsToReturn .= \File::get($part['path']);
                 }
             }
         }
         return $partsToReturn;
-        
-        
-
     }
 
 
-    public function renderManualDoc($data) {
-        
-        
-        
-        //Modification des urls des images
-        // $regex = '/!\[(.*)\]\(([^ ]+)\)/m';
-        // $basePath = '/plugins/'.$docData['relativePath'];
-        // $subst = '![$1]('.$basePath.htmlspecialchars('/$2)');
-        // $result = preg_replace($regex, $subst, $fileContent);
-        // //
-        // $result = $this->integrateSubart($result);
+    public function renderManualDoc($data)
+    {
         $fileContent = \Markdown::parse($data->content);
         return $fileContent;
     }

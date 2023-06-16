@@ -31,7 +31,7 @@ class Plugin extends PluginBase
      */
     public function register()
     {
-
+        $this->registerConsoleCommand('docser:createrolesdoc', 'Waka\Docser\Console\CreateRolesDoc');
     }
 
     /**
@@ -65,6 +65,14 @@ class Plugin extends PluginBase
             'waka.docser.admin' => [
                 'tab' => 'Waka - docser',
                 'label' => 'Administrateur de docser',
+            ],
+             'waka.docser.technics' => [
+                'tab' => 'Waka - docser',
+                'label' => 'A accès aux docs techniques',
+            ],
+             'waka.docser.integrator' => [
+                'tab' => 'Waka - docser',
+                'label' => 'A accès aux docs pour les integrateurs',
             ],
         ];
     }
