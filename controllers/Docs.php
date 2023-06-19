@@ -56,9 +56,9 @@ class Docs extends Controller
     public function getManualDocsNavigation()
     {
         $docs = Appdoc::get(['name', 'slug', 'description', 'permissions']);
-        trace_log($docs->toArray());
+        //trace_log($docs->toArray());
         $docs = $this->filterByPermission($docs);
-        trace_log($docs->toArray());
+        //trace_log($docs->toArray());
         return $docs;
     }
 

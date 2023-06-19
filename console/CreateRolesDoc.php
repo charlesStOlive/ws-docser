@@ -49,13 +49,13 @@ class CreateRolesDoc extends BaseScaffoldCommand
                 'permissions' => $this->setPermissions($role->permissions, $allPermissions)
             ];
         });
-        trace_log($roles->toArray());
+        //trace_log($roles->toArray());
         $sourceFile = $this->getSourcePath() . '/stubs/roles.md.stub';
-        trace_log($sourceFile);
+        //trace_log($sourceFile);
         $destinationFile = $this->getDestinationPath() . '/docs/all_roles.md';
-        trace_log($destinationFile);
+        //trace_log($destinationFile);
         $destinationContent = $this->files->get($sourceFile);
-        trace_log(compact('roles'));
+        //trace_log(compact('roles'));
         $destinationContent = \Twig::parse($destinationContent, compact('roles'));
         $this->makeDirectory($destinationFile);
 
