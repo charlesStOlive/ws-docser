@@ -12,8 +12,8 @@ columns:
         searchable: false
         sortable: true
     updated_at:
-        label: waka.utils::lang.global.updated_at
+        label: waka.wutils::lang.global.updated_at
         type: timetense
     sort_order:
-        label: waka.utils::lang.global.sort_order
+        label: waka.wutils::lang.global.sort_order
         invisible: true

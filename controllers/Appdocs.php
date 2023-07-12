@@ -12,7 +12,7 @@ class Appdocs extends Controller
     public $implement = [
         'Backend.Behaviors.FormController',
         'Backend.Behaviors.ListController',
-        'Waka.Utils.Behaviors.BtnsBehavior',
+        'Waka.Wutils.Behaviors.BtnsBehavior',
     ];
     public $formConfig = 'config_form.yaml';
     public $listConfig = 'config_list.yaml';
