@@ -64,15 +64,15 @@ class Plugin extends PluginBase
         return [
             'waka.docser.edit' => [
                 'tab' => 'Waka - docser',
-                'label' => 'Peut créer de la doc',
+                'label' => 'waka.docser::lang.permissions.edit',
             ],
              'waka.docser.doc.technic' => [
                 'tab' => 'Waka - docser',
-                'label' => 'A accès aux docs techniques',
+                'label' => 'waka.docser::lang.permissions.doc.technic',
             ],
              'waka.docser.doc.integrator' => [
                 'tab' => 'Waka - docser',
-                'label' => 'A accès aux docs pour les integrateurs',
+                'label' => 'waka.docser::lang.permissions.doc.integrator',
             ],
         ];
     }
